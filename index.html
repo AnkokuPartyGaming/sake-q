@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>この小瓶の答え合わせ（試作）｜PuzzleVox</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#DA3616">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Poppins:wght@700&display=swap">
+<style>
+/* ブランドの共通CSSから、このページで使う分だけ */
+/* PuzzleVox：値と部品の正はブランドキット。朱は本文に使わない */
+:root{--shu:#DA3616;--on-shu:#FDFCFA;--ink:#15151A;--paper:#FBFAF7;--white:#FBFAF7;--sub:#5C5C66;--line:#E4E1DA;
+--font-jp:"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;--font-latin:Poppins,"Noto Sans JP",sans-serif;
+--radius-button:999px;--radius-field:10px}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.85 var(--font-jp);overflow-x:hidden;overflow-wrap:anywhere}
+h1,h2,h3{margin:0;font-weight:900;letter-spacing:-.01em;line-height:1.3;font-feature-settings:"palt"}
+p{margin:0}
+a{color:inherit;text-underline-offset:4px}
+:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.n{display:inline-block}
+.pv-wrap{max-width:1040px;margin-inline:auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.pv-edge{display:block;width:100%;height:auto;margin-bottom:-1px}
+.pv-photo{display:block;width:100%;height:auto;margin-bottom:-1px}
+.pv-btn{display:inline-block;padding:15px 38px;border:0;border-radius:var(--radius-button);font:700 17px/1.4 var(--font-jp);text-decoration:none;cursor:pointer}
+.pv-btn--solid{background:var(--shu);color:var(--on-shu)}
+.pv-btn--solid:hover{background:var(--ink);color:var(--white)}
+.pv-btn--on-shu{background:var(--white);color:var(--ink)}
+.pv-btn--on-shu:hover{background:var(--ink);color:var(--white)}
+.pv-btn:focus-visible,.pv-field:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.shu{background:var(--shu);color:var(--on-shu)}
+/* QRの先の体験（試作）：1画面に1つ・2択・明日言える一文・造った人へ */
+.q-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:14px}
+.q-top img{display:block;width:132px;height:auto}
+.q-lang{display:flex;gap:4px;font:700 13px/1 var(--font-jp)}
+.q-lang button{border:1px solid currentColor;background:transparent;color:inherit;padding:7px 10px;border-radius:999px;font:inherit;cursor:pointer}
+.q-lang button[aria-pressed=true]{background:var(--on-shu);color:var(--ink);border-color:var(--on-shu)}
+.q-tag{display:inline-block;font:700 12px/1 var(--font-jp);letter-spacing:.06em;padding:6px 10px;border:1px solid currentColor;border-radius:999px}
+.q-main{max-width:560px;margin-inline:auto;padding:22px max(20px,env(safe-area-inset-left,0px)) 28px;min-height:58vh}
+.q-step{display:none}
+.q-step.on{display:block;animation:q-in .35s ease-out}
+@keyframes q-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.q-step.on{animation:none}}
+.q-k{font:700 13px/1.4 var(--font-jp);color:var(--sub);letter-spacing:.04em}
+.q-n{font:700 13px/1 var(--font-latin);color:var(--sub);float:right}
+.q-h{font-size:clamp(28px,8.4vw,40px);line-height:1.3;margin:10px 0 16px}
+.q-p{font-size:16px;line-height:1.85;margin-bottom:22px}
+.q-art{display:block;width:min(78vw,320px);height:auto;margin:6px auto 20px;image-rendering:pixelated}
+.q-go{width:100%;text-align:center}
+.q-choice{display:grid;gap:12px;margin:4px 0 14px}
+.q-choice button{display:block;width:100%;text-align:left;padding:18px 20px;border:2px solid var(--ink);border-radius:var(--radius-field);background:#fff;color:var(--ink);cursor:pointer;font:inherit}
+.q-choice button:hover,.q-choice button:focus-visible{background:var(--ink);color:var(--white)}
+.q-choice b{display:block;font:900 24px/1.3 var(--font-jp)}
+.q-choice span{display:block;font-size:14px;line-height:1.6;margin-top:4px}
+.q-note{font-size:13px;color:var(--sub);line-height:1.7}
+.q-say{margin:4px 0 20px;padding:18px 18px 16px;background:#fff;border:1px solid var(--line)}
+.q-say .q-k{margin-bottom:6px}
+.q-say p{font:700 18px/1.7 var(--font-jp)}
+.q-word{margin:-8px 0 20px;font-size:14px;color:var(--sub)}
+.q-word b{color:var(--ink);font-size:18px}
+.q-links{display:grid;gap:10px}
+.q-links a.q-sub{text-align:center;font-size:14px}
+.q-foot{border-top:1px solid var(--line);padding:16px max(20px,env(safe-area-inset-left,0px)) 28px;max-width:560px;margin-inline:auto;font-size:12px;line-height:1.8;color:var(--sub)}
+html:not([lang=ja]) [data-l=ja],html:not([lang=en]) [data-l=en]{display:none!important}
+</style>
+</head>
+<body>
+<header class="shu">
+ <div class="pv-wrap q-top">
+  <img src="logo-white.svg" alt="PuzzleVox" width="132" height="24">
+  <div class="q-lang" role="group" aria-label="言語 / Language">
+   <button type="button" data-set="ja" aria-pressed="true">日本語</button>
+   <button type="button" data-set="en" aria-pressed="false">English</button>
+  </div>
+ </div>
+ <div class="pv-wrap" style="padding-bottom:6px"><span class="q-tag"><span data-l="ja">試作｜QRの先の体験</span><span data-l="en">PROTOTYPE · What the QR opens</span></span></div>
+</header>
+<svg class="pv-edge" viewBox="-60 88 320 58" aria-hidden="true"><path fill="var(--shu)" d="M-60.00 92.13L110.05 106.87L110.91 107.01L111.42 107.15L112.16 107.47L112.85 107.89L113.46 108.40L114.00 109.00L114.44 109.67L114.78 110.40L114.95 110.91L115.10 111.70L115.12 112.77L115.00 113.56L114.38 115.93L114.10 117.68L114.00 119.71L114.10 121.47L114.32 122.95L114.51 123.82L115.10 125.76L115.42 126.59L116.06 127.94L116.96 129.46L118.17 131.09L119.37 132.39L120.48 133.40L121.17 133.95L122.63 134.94L124.43 135.90L125.24 136.25L126.65 136.76L128.62 137.25L130.37 137.50L132.14 137.57L133.02 137.54L134.51 137.40L136.24 137.06L138.19 136.47L139.82 135.78L141.14 135.08L141.89 134.61L143.52 133.40L144.19 132.82L145.24 131.76L146.37 130.40L147.51 128.71L148.21 127.39L148.58 126.59L149.26 124.67L149.68 122.95L149.92 121.20L149.98 120.32L149.98 118.83L149.77 116.17L149.91 115.09L150.25 114.06L150.64 113.35L151.13 112.69L151.51 112.30L152.14 111.79L152.84 111.38L153.34 111.16L154.12 110.93L154.66 110.85L155.81 110.84L260.00 119.87L260.00 88.00L-60.00 88.00Z"/></svg>
+
+<main class="q-main" aria-live="polite">
+
+ <section class="q-step on" data-step="1">
+  <p class="q-k"><span class="q-n">1/4</span><span data-l="ja">読めましたね</span><span data-l="en">You scanned it</span></p>
+  <h1 class="q-h"><span data-l="ja">この絵、<span class="n">QRでした。</span></span><span data-l="en">This drawing was a QR code.</span></h1>
+  <img class="q-art" src="qr.png" width="588" height="588" alt="">
+  <p class="q-p"><span data-l="ja">絵だと思って読んだら、QRだった。この小瓶は、ラベルの絵そのものが入口です。</span><span data-l="en">You thought it was a picture — it was a QR. On this little bottle, the label art itself is the way in.</span></p>
+  <button class="pv-btn pv-btn--solid q-go" data-next><span data-l="ja">答え合わせをする</span><span data-l="en">See the answer</span></button>
+ </section>
+
+ <section class="q-step" data-step="2">
+  <p class="q-k"><span class="q-n">2/4</span><span data-l="ja">絵の答え合わせ</span><span data-l="en">The answer to the drawing</span></p>
+  <h2 class="q-h"><span data-l="ja">この子が持っていたのは、<span class="n">三つ葉。</span></span><span data-l="en">It was holding a three-leaf clover.</span></h2>
+  <p class="q-p"><span data-l="ja">三つ葉は「3本で1セット」のしるし。3本を飲み比べると、自分が好きな味の"側"がひとつ分かります。</span><span data-l="en">Three leaves mean “a set of three.” Taste all three, and you find out which side of sake is yours.</span></p>
+  <p class="q-note" style="margin-bottom:22px"><span data-l="ja">飲み方：1口目を舌の上で転がして、2〜3分おいてから2口目。</span><span data-l="en">How to drink: roll the first sip on your tongue, wait 2–3 minutes, then take the second.</span></p>
+  <button class="pv-btn pv-btn--solid q-go" data-next><span data-l="ja">ひと口、飲んでみた</span><span data-l="en">I took a sip</span></button>
+ </section>
+
+ <section class="q-step" data-step="3">
+  <p class="q-k"><span class="q-n">3/4</span><span data-l="ja">2択</span><span data-l="en">Pick one</span></p>
+  <h2 class="q-h"><span data-l="ja">ひと口目、<span class="n">どっちに感じた？</span></span><span data-l="en">First sip — how did it feel?</span></h2>
+  <div class="q-choice">
+   <button type="button" data-pick="fukuramu"><b><span data-l="ja">ふくらむ</span><span data-l="en">Fukuramu</span></b><span><span data-l="ja">口の中で、味が広がった</span><span data-l="en">It bloomed and filled your mouth</span></span></button>
+   <button type="button" data-pick="kireru"><b><span data-l="ja">きれる</span><span data-l="en">Kireru</span></b><span><span data-l="ja">すっと、消えていった</span><span data-l="en">It cut clean and faded away</span></span></button>
+  </div>
+  <p class="q-note"><span data-l="ja">正解はありません。感じたほうを。</span><span data-l="en">There is no right answer. Pick what you felt.</span></p>
+ </section>
+
+ <section class="q-step" data-step="4">
+  <p class="q-k"><span class="q-n">4/4</span><span data-l="ja">あなたは</span><span data-l="en">You are</span></p>
+  <h2 class="q-h"><span data-l="ja">“<span class="r-ja"></span>”側。</span><span data-l="en">On the “<span class="r-en"></span>” side.</span></h2>
+  <div class="q-say">
+   <p class="q-k"><span data-l="ja">明日そのまま言える一文</span><span data-l="en">A line you can say tomorrow</span></p>
+   <p><span data-l="ja">「日本酒は“ふくらむ”か“きれる”かで選ぶといいよ。私は<span class="r-ja"></span>派。」</span><span data-l="en">“Pick sake by fukuramu (blooms) or kireru (cuts clean). I’m a <span class="r-en"></span> person.”</span></p>
+  </div>
+  <p class="q-word" data-l="en">Your Japanese word today: <b class="r-kana"></b> (<span class="r-en"></span>)</p>
+  <p class="q-p"><span data-l="ja">2本目は反対側を。言葉は、比べると体に入ります。</span><span data-l="en">Try the other side with bottle two. Words stick when you compare.</span></p>
+  <button class="pv-btn pv-btn--solid q-go" data-next><span data-l="ja">造った人を見る</span><span data-l="en">Meet the maker</span></button>
+ </section>
+
+ <section class="q-step" data-step="5">
+  <p class="q-k"><span data-l="ja">造った人</span><span data-l="en">Who made it</span></p>
+  <h2 class="q-h"><span data-l="ja">造ったのは、<span class="n">明石の酒蔵。</span></span><span data-l="en">Made by a sake brewery in Akashi.</span></h2>
+  <p class="q-p"><span data-l="ja">本番では、ここに蔵の名前と物語、そして蔵のネットショップへの入口が入ります。小瓶で好みが分かったら、次の1本は蔵から。</span><span data-l="en">In the real version, the brewery’s name, its story and a link to its online shop go here. Find your taste with a small bottle — get the next one from the brewery.</span></p>
+  <div class="q-links">
+   <button class="pv-btn pv-btn--solid q-go" data-restart><span data-l="ja">最初からもう一度</span><span data-l="en">Start over</span></button>
+   <a class="q-sub" href="https://puzzlevox.com/sake/"><span data-l="ja">PuzzleVoxのお酒のブランド事業</span><span data-l="en">About PuzzleVox (Japanese)</span></a>
+  </div>
+ </section>
+
+</main>
+
+<footer class="q-foot">
+ <p data-l="ja">これは販売前の試作です。現在、酒類の販売は行っていません。<br>20歳未満の者の飲酒は法律で禁止されています。<br>© PuzzleVox Inc.</p>
+ <p data-l="en">This is a pre-launch prototype. We do not sell alcohol at this time.<br>Drinking under the age of 20 is prohibited by law in Japan.<br>© PuzzleVox Inc.</p>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  var steps = [].slice.call(document.querySelectorAll('.q-step'));
+  var cur = 0;
+  var words = {fukuramu: {ja: 'ふくらむ', en: 'fukuramu'}, kireru: {ja: 'きれる', en: 'kireru'}};
+  function setLang(l){
+    root.lang = l;
+    [].forEach.call(document.querySelectorAll('[data-set]'), function(b){ b.setAttribute('aria-pressed', b.dataset.set === l ? 'true' : 'false'); });
+    try { localStorage.setItem('pv-q-lang', l); } catch(e) {}
+  }
+  function show(i){
+    steps[cur].classList.remove('on');
+    cur = i;
+    steps[cur].classList.add('on');
+    window.scrollTo(0, 0);
+    var h = steps[cur].querySelector('.q-h');
+    if (h) { h.setAttribute('tabindex', '-1'); h.focus({preventScroll: true}); }
+  }
+  var saved = null;
+  try { saved = localStorage.getItem('pv-q-lang'); } catch(e) {}
+  setLang(saved || ((navigator.language || 'ja').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en'));
+  document.addEventListener('click', function(e){
+    var t = e.target.closest('button');
+    if (!t) return;
+    if (t.dataset.set) return setLang(t.dataset.set);
+    if (t.hasAttribute('data-next')) return show(Math.min(cur + 1, steps.length - 1));
+    if (t.hasAttribute('data-restart')) return show(0);
+    if (t.dataset.pick) {
+      var w = words[t.dataset.pick];
+      [].forEach.call(document.querySelectorAll('.r-ja,.r-kana'), function(n){ n.textContent = w.ja; });
+      [].forEach.call(document.querySelectorAll('.r-en'), function(n){ n.textContent = w.en; });
+      show(3);
+    }
+  });
+})();
+</script>
+</body>
+</html>
